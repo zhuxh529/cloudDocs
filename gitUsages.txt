@@ -1,0 +1,4 @@
+touch README.mdgit initgit add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/zhuxh529/test2.git
+git push -u origin master
