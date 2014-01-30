@@ -1,0 +1,2 @@
+the Written part of the lab is at labDoc.pdf.
+I used GNU Octave to do this homework.(GNU Octave is pretty much like Matlab, but just a free version, if you have any problem running my code please contact me. My email is zhuxh529@gmail.com, phone is 6184340261).
