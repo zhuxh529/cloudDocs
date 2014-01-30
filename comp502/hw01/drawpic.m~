@@ -1,0 +1,4 @@
+function drawpic(m)
+	m=reshape(m,12, 12);
+	figure(1), imshow(m);
+end
