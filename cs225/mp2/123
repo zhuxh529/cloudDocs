@@ -1,0 +1,17 @@
+void Scene::clear()
+{
+	  for(int i=0; i<mm; i++)
+	{
+	 if(img[i]!=NULL) 
+    {delete img[i];
+    img[i]=NULL; 	
+	}
+   }
+   	delete [] img;
+     img=NULL;
+     delete [] xx;
+     xx=NULL;
+     delete [] yy;
+     yy=NULL;
+     
+}

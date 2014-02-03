@@ -1,0 +1,23 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+ using namespace std; 
+
+void test(int  c=5)
+{c = c-1;
+ if(c<=0)
+ return;
+ else{
+ test(c);
+  cout<<"right"<<c<<endl;
+ test(c);
+ cout<<"left"<<c<<endl;
+ 
+
+}
+}
+
+int main( )
+{
+    test();
+}

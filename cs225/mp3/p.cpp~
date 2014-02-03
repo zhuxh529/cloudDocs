@@ -1,0 +1,632 @@
+where to define ListNode* B; ??????? 
+B=new ListNode;
+   B->data=ndata;
+
+
+
+
+
+if(Z!=NULL)
+    {delete Z->prev;
+	 }
+    else break; 
+
+
+
+
+
+
+
+{
+   ListNode* Z;
+   ListNode* Y;
+   
+   if(length>0)
+   {
+   Z=head;
+	for(int i=0;i<length;i++)
+	{
+   
+	Y=Z->next;
+   if(Z!=NULL) {
+	delete Z;
+	Z=Y;
+   } 
+  
+	}
+    
+    tail=NULL;
+    head=NULL;
+    length=0;
+   }
+   else if(length==0)
+	{tail=NULL;
+	head=NULL;
+	}  
+
+
+
+
+
+
+
+
+
+
+
+ ListNode* A;
+   A=new ListNode(ndata);
+   if(length>0)
+  {
+   A->next=head;
+   head->prev=A;
+   A->prev=NULL;
+   head=A;
+   length=length+1;
+  }
+   if(length==0)
+  {
+   head=A;
+   tail=A;
+   head->prev=NULL;
+   head->next=NULL;
+	length=1;
+  }
+  delete A;
+   A=NULL;
+
+
+
+
+
+
+
+
+
+
+
+{
+   ListNode* Z;
+   ListNode* Y;
+   
+   if(length>0)
+   {
+   Z=head;
+	for(int i=1;i<length;i++)
+	{
+	Y=Z->next;
+	delete Z;
+   Z=Y;
+  	}
+    delete tail;
+    tail=NULL;
+    head=NULL;
+    length=0;
+   }
+   else if(length==0)
+	{tail=NULL;
+	head=NULL;
+	}  
+   Z=NULL;
+   Y=NULL;
+   
+
+   
+	// your code here
+}
+
+
+
+
+
+
+
+
+
+
+if(length>0)
+   {
+   Z=head;
+	for(int i=1;i<length;i++)
+	{
+	Y=Z->next;
+	delete Z;
+   Z=Y;
+  	}
+    delete tail;
+    tail=NULL;
+    head=NULL;
+    length=0;
+   }
+
+
+
+
+while(Z->next!=NULL)
+{
+Y=Z;
+Z=Z->next;
+delete Y;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sort 
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;
+
+
+template <class T>
+void List<T>::sort()
+{
+  if(length>1)
+ { 
+   
+ List<T> left=(*this).mixSplit();
+ List<T> right=(*this);
+
+   left.sort();
+
+   right.sort();
+  
+   *this=merge(right, left);
+ 
+
+}
+
+}	// your code here
+
+
+
+
+template <class T>
+List<T> List<T>::merge(List<T> &left, List<T> &right)
+{
+  List<T> result;
+  ListNode* A, *B, *C, *D;
+  while(left.length>0||right.length>0)
+{
+  if(left.length>0 && right.length>0)
+   {
+		if(((left.head)->data)<((right.head)->data))
+      { A=(right.head)->next;
+        result.insertBack((right.head)->data);
+    	  right.head=A;
+      }
+     else{ B=(left.head)->next;
+		  result.insertBack((left.head)->data);
+    	  left.head=B;
+   }
+	}
+     else if(right.length>0)
+   { C=(left.head)->next;
+	  result.insertFront((left.head)->data);
+	  left.head=C;
+   }
+     else if(left.length>0)
+   { D=(right.head)->next;
+	  result.insertFront((right.head)->data);
+	  right.head=D;
+   }
+
+
+}
+
+return result;
+
+}
+
+
+
+
+
+template <class T>
+List<T> & List<T>::operator===(List<T> const & rhs)
+{
+	if (this != &rhs)
+	{
+		head = NULL;
+	tail = NULL;
+	length = 0;
+
+	head=other.head;
+   tail=other.tail;
+   length=other.length;
+		
+	}
+	return *this;
+}
+
+
+
+
+
+
+ * Mergesort -- Sorting Function (GRADED!)
+
+ *  - Sorts the current list by applying Mergesort
+
+
+
+
+
+
+/*wangwangwangwangwangwangwangwang*//*wangwangwangwangwangwangwangwang*//*wangwangwangwangwangwangwangwang*/
+
+template <class T>
+
+void List<T>::sort()
+
+{
+
+if(length<=1) return;
+
+
+
+List<T> left, right;
+
+int middle = length/2;
+
+ListNode* mnode;
+
+mnode = head;
+
+
+
+for(int i=1; i<=middle; i++)
+
+mnode=mnode->next;
+
+mnode->prev->next=NULL;
+
+left.tail=mnode->prev;
+
+mnode->prev=NULL;
+
+
+
+left.head=head;
+
+left.length=middle;
+
+
+
+right.head=mnode;
+
+right.tail=tail;
+
+right.length=length-middle;
+
+
+
+//make cleans values in head, tail, and length
+
+head=NULL;
+
+tail=NULL;
+
+length=0;
+
+
+
+left.sort();
+
+right.sort();
+
+
+
+//the recursive path that merging listnodes
+
+while(left.length>0||right.length>0){
+
+if(left.length>0&&right.length>0){
+
+if(left.head->data<=right.head->data)
+
+append(left);
+
+else
+
+append(right);
+
+}
+
+else if(left.length>0)
+
+append(left);
+
+else if(right.length>0)
+
+append(right);
+
+}
+
+mnode=NULL;
+
+}
+
+
+
+
+
+
+
+template <class T>
+
+void List<T>::append(List<T> & list)
+
+{
+
+if(length==0&&list.length!=0){
+
+head=list.head;
+
+tail=list.head;
+
+length=1;
+
+}
+
+else if(length!=0&&list.length!=0){
+
+tail->next=list.head;
+
+list.head->prev=tail;
+
+tail=tail->next;
+
+length+=1;
+
+}
+
+if(list.length==1){
+
+list.length=0;
+
+list.head=NULL;
+
+list.tail=NULL;
+
+}
+
+else{
+
+list.length-=1;
+
+list.head=list.head->next;
+
+list.head->prev->next=NULL;
+
+list.head->prev=NULL;
+
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*yeyeyeyeyeyeyeyey*//*yeyeyeyeyeyeyeyey*//*yeyeyeyeyeyeyeyey*//*yeyeyeyeyeyeyeyey*//*yeyeyeyeyeyeyeyey*/
+
+/**
+ * Mergesort -- Sorting Function (GRADED!)
+ *  - Sorts the current list by applying Mergesort
+ */
+template <class T>
+void List<T>::sort()
+{
+	//Base case: return if size is 1 or 0
+	if(length==0 || length==1)
+		return;
+	//Set up two lists hold the left half and right half
+	//of the original list 	
+	List llist;
+	List rlist;
+	ListNode *a = head;
+	ListNode *b; 
+	int middle = length /2;
+	//loop pointer "a" to right half list's tail
+	for(int i=1; i<middle; i++)
+	{
+		a = a->next;
+	}
+	//set pointer "b" to right half list's head
+	b = a->next;
+	//break the connection in the middle
+	a->next = NULL;
+	b->prev = NULL;
+	//set up the structure of two lists
+	llist.head = head;
+	llist.tail = a;
+	llist.length = middle;
+
+	rlist.head = b;
+	rlist.tail = tail;
+	rlist.length = middle + (length%2);
+	//recursion part
+	llist.sort();
+	rlist.sort();
+	//merge the two sorted halves back together into a single list
+	merge(llist, rlist);
+	//destruct two halves' lists
+	llist.head = NULL;
+	llist.tail = NULL;
+	rlist.head = NULL;
+	rlist.tail = NULL;
+}
+
+//Merge function: merge two sorted lists to one sorted list
+template <class T>
+void List<T>::merge(List<T> & llist, List<T> & rlist)
+{
+	ListNode *curr; //pointer of current smaller node
+	ListNode *small; //pointer of smaller node
+	ListNode *big; //pointer of bigger node
+
+	if(llist.head->data <= rlist.head->data){
+		head = llist.head; //set up result list's head
+		//define small & big pointer
+		small = llist.head;
+		big = rlist.head;
+	}
+	else{
+		head = rlist.head; //set up result list's head
+		//define small & big pointer
+		small = rlist.head;
+		big = llist.head;
+	}
+	//length of result list
+	length = llist.length + rlist.length;
+	//merge two halves' lists
+	while(small->next!=NULL)
+	{
+		//determine the next smaller pointer's position
+		//and the next bigger pointer's position
+		if(small->next->data <= big->data){
+			curr = small;
+			small = small->next;
+		}
+		//if the bigger pointer's position will change,
+		//then prepend smaller pointer's node to
+		//bigger pointer's node, and change the position 
+		//of pointer "small" and "big"
+		else{
+			curr = small;
+			small = small->next;
+			curr->next = big;
+			big->prev = curr;
+			curr = curr->next;
+			big = small;
+			small = curr;
+		}
+	}
+	//determine whether end up with smaller pointer
+	//if it is, then prepend this node to bigger pointer's node
+	if(small->next==NULL){
+		curr = small;
+		small = small->next;
+		curr->next = big;
+		big->prev = curr;
+	}
+	//determine the result list's tail position
+	if(curr == llist.tail)
+		tail = rlist.tail;
+	else
+		tail = llist.tail;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+template <class T>
+void List<T>::sort()
+{
+  
+ 
+  if(length>1)
+  {
+List<T> left, right;
+middle=length/2;
+ListNode* A, *B;
+A=head;
+left.head=head;
+left.head->prev=NULL;
+for(int i=0; i<middle; i++)
+{
+A=A->next;
+}
+
+left.tail=A->prev;
+left.tail->next=NULL;
+
+right.head=A;
+right.head->prev=NULL;
+right.tail=tail;
+right.tail->next=NULL;
+
+right.sort();
+left.sort();
+merge(right,left);
+
+
+
+  }
+  else return;
+
+}
+
+
+template <class T>
+void List<T>::merge(&right, &)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

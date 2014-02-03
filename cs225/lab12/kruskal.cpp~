@@ -1,0 +1,44 @@
+/*
+    Lab 12: Kruskal's Algorithm
+    Written by Sean Massung for CS 225 Spring 2011
+*/
+
+#include "kruskal.h"
+
+void findMST(Graph & g){
+
+  DisjointSets set;
+  vector<EdgeData> edges;
+  edges=g.getEdges();
+  
+  
+  
+    // your code here
+}
+
+
+void bubblesort(int *edges[], int n )
+{
+
+int size;
+size=n;
+int i;
+int j=0;
+bool la=true;
+int tmp;
+
+while(la)
+{
+j++; 
+la=false;
+ for(i=0; i<size-j;i++)
+{
+ if (edges[i] > edges[i + 1]) {
+                        tmp = *edges[i];
+                        *edges[i] = *edges[i + 1];
+                        *edges[i + 1] = tmp;
+                        la = true;
+                  }
+}
+}
+}

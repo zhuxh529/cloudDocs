@@ -1,0 +1,634 @@
+// **************************************************************
+// *                                                            *
+// *  quadtree.cpp                                              *
+// *                                                            *
+// *  A quadtree class                                          *
+// *                                                            *
+// *  CS 225 Fall 2006                                          *
+// *                                                            *
+// **************************************************************
+
+#include "quadtree.h"
+
+//const
+Quadtree::Quadtree()
+:root(NULL),dis(0)
+{}
+
+
+//const
+
+Quadtree::Quadtree(const BMP & source, int d)
+{
+dis=d;
+RGBApixel BBQ;
+root=new QuadtreeNode;
+buildT(source, d);
+
+}
+
+void Quadtree::Printdis()
+{
+cout<<"the distance is  "<<dis<<endl;
+}
+
+
+// tooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+
+void Quadtree::buildT(const BMP & source, int d)
+{
+
+RGBApixel BBQ;
+
+dis=d;
+
+
+if(dis!=1) 
+{realbuild(source, dis, root, 0, 0, BBQ);
+ avg(root,d);
+}
+else if(dis==1) 
+{
+(root->element).Red=source(0,0)->Red;
+(root->element).Green=source(0,0)->Green;
+(root->element).Blue=source(0,0)->Blue;
+setchildren0(root);
+
+}
+}
+
+
+
+//buildtree
+void Quadtree::buildTree(const BMP & source, int d)
+{
+
+RGBApixel BBQ;
+
+ clear(root);
+
+ dis=d;
+
+
+root=new QuadtreeNode;
+
+
+if(dis!=1) 
+{realbuild(source, dis, root, 0, 0, BBQ);
+ 
+ avg(root,d);
+}
+else if(dis==1) 
+{
+(root->element).Red=source(0,0)->Red;
+(root->element).Green=source(0,0)->Green;
+(root->element).Blue=source(0,0)->Blue;
+setchildren0(root);
+
+}
+}
+
+/*
+void Quadtree::avg(QuadtreeNode* subroot)
+{
+if(subroot->nwChild==NULL) return;
+avg(subroot->nwChild);
+avg(subroot->neChild);
+avg(subroot->swChild);
+avg(subroot->seChild);
+
+subroot->element.Red = ((subroot->nwChild)->element.Red+ (subroot->neChild)->element.Red+ (subroot->seChild)->element.Red+( subroot->swChild)->element.Red)/4;
+subroot->element.Green = ((subroot->nwChild)->element.Green+ (subroot->neChild)->element.Green+ (subroot->seChild)->element.Green+ (subroot->swChild)->element.Green)/4;
+subroot->element.Blue = ((subroot->nwChild)->element.Blue+ (subroot->neChild)->element.Blue+ (subroot->seChild)->element.Blue+ (subroot->swChild)->element.Blue)/4;
+
+}
+*/
+
+
+void Quadtree::avg(QuadtreeNode* subroot, int d)
+{  if(d<=1)
+   {
+    return;
+   }
+   else{
+ 
+   avg(subroot->nwChild,d/2);
+   avg(subroot->neChild,d/2);
+   avg(subroot->seChild,d/2);
+   avg(subroot->swChild,d/2);
+   subroot->element.Red = ((subroot->nwChild)->element.Red+(subroot->neChild)->element.Red+(subroot->seChild)->element.Red+(subroot->swChild)->element.Red)/4;
+   subroot->element.Green = ((subroot->nwChild)->element.Green+(subroot->neChild)->element.Green+(subroot->seChild)->element.Green+(subroot->swChild)->element.Green)/4;
+   subroot->element.Blue = ((subroot->nwChild)->element.Blue+(subroot->neChild)->element.Blue+(subroot->seChild)->element.Blue+(subroot->swChild)->element.Blue)/4;
+   }
+  
+ 
+}
+
+
+
+
+
+
+
+//real...................................................................................
+
+void Quadtree::realbuild(const BMP & source, int d, QuadtreeNode* subroot, int x, int y, RGBApixel & BBQ)
+{
+
+
+ d=d/2;
+ subroot->nwChild=new QuadtreeNode;
+ subroot->neChild=new QuadtreeNode;
+ subroot->swChild=new QuadtreeNode;
+ subroot->seChild=new QuadtreeNode;
+
+  
+if(d>1)
+{
+ 
+ realbuild(source, d, subroot->nwChild, x, y, BBQ);
+
+// cout<<BBQ.Red<<"  ";
+
+ realbuild(source, d, subroot->neChild, x+d, y, BBQ);
+
+
+// cout<<BBQ.Red<<"  ";
+
+ realbuild(source, d, subroot->swChild, x, y+d,BBQ);
+
+// cout<<BBQ.Red<<"  ";
+
+ realbuild(source, d, subroot->seChild, x+d, y+d,BBQ);
+
+ //cout<<BBQ.Red<<endl;
+
+
+
+ 
+ }
+ if(d<=1)
+{
+ (subroot->nwChild->element).Red=(*source(x,y)).Red;
+(subroot->nwChild->element).Blue=(*source(x,y)).Blue;
+(subroot->nwChild->element).Green=(*source(x,y)).Green;
+ 
+ (subroot->neChild->element).Red=(*source(x+d,y)).Red;
+ (subroot->neChild->element).Green=(*source(x+d,y)).Green;
+ (subroot->neChild->element).Blue=(*source(x+d,y)).Blue;
+
+ (subroot->swChild->element).Red=(*source(x,y+d)).Red;
+ (subroot->swChild->element).Green=(*source(x,y+d)).Green;
+ (subroot->swChild->element).Blue=(*source(x,y+d)).Blue;
+
+
+ (subroot->seChild->element).Red=(*source(x+d,y+d)).Red;
+ (subroot->seChild->element).Green=(*source(x+d,y+d)).Green;
+ (subroot->seChild->element).Blue=(*source(x+d,y+d)).Blue;
+
+
+
+setchildren0(subroot->nwChild);
+setchildren0(subroot->neChild);
+setchildren0(subroot->swChild);
+setchildren0(subroot->seChild);
+
+return;
+
+}
+}
+
+
+
+
+
+
+void Quadtree::setchildren0(QuadtreeNode* subroot)
+{ 
+subroot->nwChild=NULL;
+subroot->neChild=NULL;
+subroot->swChild=NULL;
+subroot->seChild=NULL;
+
+}
+
+
+
+
+//BIG THREE
+
+//1. copy constructor*img(x,y)=
+
+
+
+Quadtree::Quadtree(const Quadtree & rhs)
+{
+	dis=rhs.dis;
+ if (rhs.root==NULL) root = NULL;
+ else
+  {
+  // root = new QuadtreeNode;
+   root = copy(rhs.root);
+  }
+}
+
+
+
+
+ Quadtree:: QuadtreeNode * Quadtree::copy(QuadtreeNode *const& subRoot)
+{
+
+
+	// Copy this node and it's children	
+   if(subRoot==NULL) return NULL;
+	QuadtreeNode * newNode = new QuadtreeNode();
+   newNode->element=subRoot->element;
+   //newNode=subRoot;
+	newNode->nwChild  = copy(subRoot->nwChild );
+	newNode->neChild =  copy(subRoot->neChild );
+ 	newNode->swChild  = copy(subRoot->swChild );
+	newNode->seChild =  copy(subRoot->seChild ); 
+	return newNode;
+}
+
+
+
+//2. operator
+
+Quadtree const & Quadtree::operator=(Quadtree const  & rhs)
+{
+   if(this== &rhs) return (*this);
+ 
+
+	clear(root);
+   if(rhs.root==NULL) root=NULL;
+   else{
+	//Quadtree();
+     dis=rhs.dis;
+		root = copy(rhs.root);
+	 //if(root==NULL) return img;
+   }
+     
+	return (*this);
+}
+
+
+
+
+
+
+
+
+//3. destructor
+Quadtree::~Quadtree()
+{
+clear(root);
+}
+
+
+//clear
+void Quadtree::clear(QuadtreeNode* subRoot)
+{
+   if (subRoot == NULL) return;
+	
+	clear(subRoot->nwChild);
+	clear(subRoot->neChild);
+	clear(subRoot->swChild);
+	clear(subRoot->seChild);
+	delete subRoot;
+   subRoot=NULL;
+
+}
+
+//................................
+
+
+
+
+
+//getpixel
+
+RGBApixel Quadtree::getPixel(int x, int y)
+{
+ int d=dis;
+ int xx=0;
+ int yy=0;
+ RGBApixel A;
+ if(x>=d || y>=d || x<0 || y<0 || root==NULL) return RGBApixel();
+ gotu(x, y, dis, root, A);
+ return A; 
+}
+
+
+
+void Quadtree::gotu(int x, int y, int d, QuadtreeNode* subroot, RGBApixel & B)
+{
+
+   if(subroot->nwChild==NULL) 
+{
+
+B=subroot->element;
+return ;
+}
+   
+    if (x>=d/2 && y>=d/2)   gotu(x-d/2, y-d/2, d/2,  subroot->seChild, B);
+     
+	 if (x>=d/2 && y<d/2)    gotu(x-d/2, y, d/2,  subroot->neChild, B);
+
+    if (x<d/2 && y>=d/2)    gotu(x, y-d/2, d/2,  subroot->swChild, B);
+
+	 if (x<d/2 && y<d/2)     gotu(x, y, d/2,  subroot->nwChild, B);
+
+return;
+
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+BMP Quadtree::decompress()
+{
+ int d=dis;
+ int x=0;
+ int y=0;
+ BMP img;
+
+ img.setSize(dis, dis);
+ if(root==NULL) return img;
+ 
+ for(int i=0; i<d; i++)
+{for(int j=0; j<d; j++)
+ {
+ (*img(i,j)).Red=getPixel(i,j).Red;
+ (*img(i,j)).Green=getPixel(i,j).Green;
+ (*img(i,j)).Blue=getPixel(i,j).Blue;
+ }
+}
+ 
+ return img;
+
+}
+
+
+
+
+
+
+ void Quadtree::clockwiseRotate()
+{
+if(root!=NULL)
+clock(root);
+}
+
+
+ void Quadtree::clock(QuadtreeNode* subroot)
+{
+ if (subroot==NULL) return;
+if(subroot->nwChild!=NULL)
+{
+QuadtreeNode* A;
+QuadtreeNode* B;
+QuadtreeNode* C;
+QuadtreeNode* D;
+
+A=subroot->nwChild;
+B=subroot->neChild;
+C=subroot->swChild;
+D=subroot->seChild;
+
+subroot->nwChild=C;
+subroot->neChild=A;
+subroot->swChild=D;
+subroot->seChild=B;
+
+clock(A);
+clock(B);
+clock(C);
+clock(D);
+}
+ 
+}
+
+
+
+//prune goes here
+	void Quadtree::prune(int i)
+{
+	
+  prunehelp(i,root);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   void Quadtree::prunehelp(int i, QuadtreeNode* subroot)
+{
+   if(subroot->nwChild==NULL) return;
+
+   
+   bool tol=false;
+   RGBApixel top;
+   top=subroot->element;
+   gettol(subroot,i, tol, top);
+   // tol=compare(subroot->nwChild, subroot->neChild, 
+   //       subroot->swChild, subroot->seChild, i);
+
+   if(tol==false) 
+   {
+clear(subroot->nwChild);
+subroot->nwChild=NULL;
+clear(subroot->neChild);
+subroot->neChild=NULL;
+clear(subroot->swChild);
+subroot->swChild=NULL;
+clear(subroot->seChild);
+subroot->seChild=NULL;
+return;
+ 
+}
+	prunehelp(i,subroot->nwChild);
+	prunehelp(i,subroot->neChild);
+	prunehelp(i,subroot->swChild);
+	prunehelp(i,subroot->seChild);
+return;
+  
+}
+
+
+void  Quadtree::gettol(QuadtreeNode* subroot, int i, bool & tol, RGBApixel & top )
+{
+if(subroot->nwChild==NULL) 
+{
+ int d;
+ d=getdif(subroot->element, top);
+ if(d>i) tol=true;
+}
+else{
+gettol(subroot->nwChild, i, tol, top);
+gettol(subroot->neChild, i, tol, top);
+gettol(subroot->swChild, i, tol, top);
+gettol(subroot->seChild, i, tol, top);
+return;
+}
+
+
+}
+
+
+
+
+
+
+
+bool  Quadtree::compare(QuadtreeNode* nw, QuadtreeNode* ne, QuadtreeNode* sw, QuadtreeNode* se, int i)
+{
+int dnw, dne, dsw, dse ;
+RGBApixel total;
+total=average(nw, ne, sw, se);
+
+ dnw=getdif(nw->element, total);
+ dne=getdif(ne->element, total);
+ dsw=getdif(sw->element, total);
+ dse=getdif(se->element, total);
+
+ if(dnw<=i && dne<=i && dsw<=i && dse<=i)
+return true;
+ else return false;
+}
+
+//get average
+RGBApixel Quadtree::average(QuadtreeNode* nw, QuadtreeNode* ne, QuadtreeNode* sw, QuadtreeNode* se)
+{
+RGBApixel BBQ;
+BBQ.Red=( (nw->element).Red+(ne->element).Red+ (sw->element).Red + (se->element).Red )/4;
+BBQ.Green=( (nw->element).Green+(ne->element).Green+ (sw->element).Green + (se->element).Green )/4;
+BBQ.Blue=( (nw->element).Blue+(ne->element).Blue+ (sw->element).Blue + (se->element).Blue )/4;
+return BBQ;
+}
+
+
+int Quadtree::getdif(RGBApixel ta, RGBApixel  total)
+{
+ int x;
+ x=pow(ta.Red-total.Red,2)+pow(ta.Green-total.Green,2)+pow(ta.Blue-total.Blue,2);
+ return x;
+}
+
+
+
+   int Quadtree::pruneSize(int i)
+{
+int a=0;
+size(i, root, a);
+return a;
+}
+
+
+
+
+   void Quadtree::size(int i, QuadtreeNode* subroot, int & a)
+{
+   if(subroot->nwChild==NULL) 
+   { a++;
+   return;
+}
+   
+   bool tol=false;
+   RGBApixel top;
+   top=subroot->element;
+   gettol(subroot,i, tol, top);
+   // tol=compare(subroot->nwChild, subroot->neChild, 
+   //       subroot->swChild, subroot->seChild, i);
+
+   if(tol==false) 
+   {
+   a++;
+   return;
+ 
+}
+	size(i,subroot->nwChild,a);
+	size(i,subroot->neChild,a);
+	size(i,subroot->swChild,a);
+	size(i,subroot->seChild,a);
+return;
+  
+}
+
+
+
+
+
+
+
+
+
+   int Quadtree::idealPrune(int i)
+{
+ int x=search(0,105075,i);
+ while(pruneSize(x)==i) x=x-1;
+ x=x+1;
+ 
+return x;
+}
+
+   int Quadtree::search(int low, int high, int x)
+{
+int mid=(low+high)/2;
+if(pruneSize(mid)>x) return search(mid+1, high, x);
+else if(pruneSize(mid)<x) return search(low, mid-1, x);
+else return mid;
+}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

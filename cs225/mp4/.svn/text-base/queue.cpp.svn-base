@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+
+
+
+template<class T>
+void Queue<T>::enqueue(T const & newItem)
+{
+   
+   inStack.push(newItem);
+
+ 
+}
+
+
+template<class T>
+ T Queue<T>::dequeue()
+{
+
+   if(isEmpty()) return NULL;
+   if(outStack.isEmpty()){
+   while(!inStack.isEmpty())
+ {
+	outStack.push(inStack.pop());
+   }
+ T x= outStack.pop();
+ return x;
+}
+  else return outStack.pop();
+
+
+}
+
+template<class T>
+ T Queue<T>::peek()
+{
+	if(isEmpty()) return NULL;
+   while(!inStack.isEmpty())
+ {
+	outStack.push(inStack.pop());
+   }
+ return outStack.peek();
+}
+
+
+
+template<class T>
+bool Queue<T>::isEmpty() const
+{
+ if(inStack.isEmpty() && outStack.isEmpty()) return true;
+ else return false;
+}

@@ -1,0 +1,85 @@
+#include "Image.h"
+#include <algorithm>
+#include<iostream>
+
+
+void Image::invertcolors()
+{
+     using namespace std;
+    int i,j;
+    int hh,ww;
+    int r,g,b;
+	ww=Image->tellWidth();
+    hh=Image->tellHeight();
+    for (i = 0; i <ww; i++)
+	{
+		for (j = 0; j <hh; j++)
+	    {
+  			r = Image(i, j)->Red;
+			g = Image(i, j)->Green;
+			b = Image(i, j)->Blue;
+			Image(i, j)->Red=255-r;
+			Image(i, j)->Green=255-g;
+			Image(i, j)->Blue=255-b;
+		}
+	}
+}
+
+
+
+
+void Image::flipleft()
+{
+    using namespace std;
+ 	int i,j;
+    int hh,ww;
+    int r,g,b;
+    int rr,gg,bb;
+	ww=Image->tellWidth();
+    hh=Image->tellHeight();
+     for (i = 0; i <=((ww-1)/2); i++)
+	{
+		for (j = 0; j <hh); j++)
+	    {
+			
+  			r = Image(i, j)->Red;
+			g = Image(i, j)->Green;
+			b = Image(i, j)->Blue;
+			Image(i, j)->Red=Image(ww-1-i, j)->Red;
+			Image(i, j)->Green=Image(ww-1-i, j)->Green;
+			Image(i, j)->Blue=Image(ww-1-i, j)->Blue;
+            Image(ww-1-i, j)->Red=r;
+			Image(ww-1-i, j)->Green=g;
+			Image(ww-1-i, j)->Blue=b;
+		}
+	}
+}
+
+
+void Image::adjustbrightness(int rr, int gg, int bb)
+{
+    using namespace std;
+	int i, j;
+    int r, g, b;
+	ww=Image->tellWidth();
+    hh=Image->tellHeight();
+    for (i = 0; i < ww; i++)
+	{
+		for (j = 0; j < hh; j++)
+		{
+			r = Image(i, j)->Red;
+			g = Image(i, j)->Green;
+			b = Image(i, j)->Blue;
+           
+			Image(i, j)->Red=min(255, (int)(r+rr));
+            Image(i, j)->Red=max(0, (int)(r+rr));
+
+			Image(i, j)->Green=min(255, (int)(g+gg));
+			Image(i, j)->Green=max(0, (int)(g+gg));
+			
+			Image(i, j)->Blue=min(255, (int)(b+bb));
+			Image(i, j)->Blue=max(0, (int)(b+bb));
+		}
+	}
+
+}

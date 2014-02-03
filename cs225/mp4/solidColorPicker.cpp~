@@ -1,0 +1,15 @@
+#include "solidColorPicker.h"
+
+
+solidColorPicker::solidColorPicker(RGBApixel fillColor)
+{
+  co=fillColar;
+
+}
+
+RGBApixel solidColorPicker::operator()(int x, int y)
+{
+	RGBApixel retval;
+   retval=co;
+	return retval;
+}

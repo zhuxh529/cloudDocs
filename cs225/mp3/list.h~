@@ -1,0 +1,94 @@
+/**
+ * Doubly Linked List (MP 3)
+ * Created by Chase Geigle for CS225, Fall 2011
+ * Modified by Jack Toole, Fall 2011
+ */
+#ifndef _LIST_H_
+#define _LIST_H_
+
+#include <iterator>
+#include <ostream>
+
+using namespace std;
+
+/**
+ * List<T> class
+ * You should not remove anything from this class definition, but
+ * you will find it helpful to add your own helper functions to this class,
+ * and are encouraged to add to it
+ */
+template <class T>
+class List
+{
+	private:
+	// The ListNode class is private to the List class via the principle of
+	// encapsulation---the end user does not need to know our node-based
+	// implementation
+	class ListNode
+	{
+		public:
+		// constructors; implemented in list_given.cpp
+		ListNode();
+		ListNode(T const & ndata);
+
+		// member variables
+		ListNode * next;
+		ListNode * prev;
+     
+     
+      
+		const T data; // const because we do not want to modify node's data
+	};
+
+	public:
+	// Provided functions; implemented in list_given.cpp
+	List();
+	List(const List<T> & other); // Lists allocate memory with "new", and thus require the big three
+	List<T> & operator=(const List<T> & rhs);
+   
+	int  size() const;
+	void print(ostream & os) const;
+	bool empty() const;
+
+	// MP3.1 Functions
+	~List();
+	void clear();
+	void insertFront(const T & ndata);
+	void insertBack(const T & ndata);
+	List<T> mixSplit();
+	void interleaveWith(List<T> &L2/* declare secondlist here and in .cpp */);
+
+	// MP3.2 Functions
+	void sort();
+   void merge(List<T> &a, List<T> &b);
+    void append(List<T> & list);
+
+
+  
+
+	// Provided Iterator Functions
+	#include "list_given.h"
+
+	private:
+	// private member variables
+	// You must use these three as specified in the spec and may not rename them
+	// You may add more if you need
+	ListNode * head;
+	ListNode * tail;
+   
+	int length;
+   
+	
+
+	// You may place any helper functions you want here.
+	void copy(List<T> const & other); // implemented in list_given.cpp
+};
+
+// needed for template instantiation
+#include "list.cpp"
+
+// this includes all of the functions that are given to you
+// (ie, the ones that you do not need to implement)
+#include "list_given.cpp"
+
+#endif

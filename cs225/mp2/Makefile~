@@ -1,0 +1,47 @@
+#declare our compiler and compiler options variables.
+COMPILER = g++
+COMPILER_FLAGS =  -c -g -O0 -Wall -Werror
+LINKER = g++
+
+
+
+
+
+# we tell make how to link testimage
+testimage : testimage.o	 image.o	 EasyBMP.o
+	$(LINKER)	testimage.o	image.o	EasyBMP.o	-o testimage
+
+# we tell make how to link testscene
+testscene : testscene.o	 scene.o 	image.o  EasyBMP.o	
+	$(LINKER)	testscene.o	 image.o		image.o	EasyBMP.o	-o testscene
+
+testimage.o : testimage.cpp  image.h  	EasyBMP.h
+	$(COMPILER)	$(COMPILER_FLAGS)	  testimage.cpp
+
+# image.cpp is compiled to get Image.o
+image.o : image.cpp image.h EasyBMP.h
+		$(COMPILER)	$(COMPILER_FLAGS)	image.cpp
+
+
+
+# EasyBMP.cpp is compiled to get EasyBMP.o
+EasyBMP.o : EasyBMP.cpp EasyBMP.h
+		$(COMPILER)	$(COMPILER_FLAGS)	EasyBMP.cpp
+
+testscene.o : testscene.cpp 	scene.h	EasyBMP.h 	image.h
+	$(COMPILER)	$(COMPILER_FLAGS) testscene.cpp
+
+# scene.cpp is compiled to get Image.o
+scene.o : scene.cpp scene.h EasyBMP.h
+		$(COMPILER)	$(COMPILER_FLAGS)	scene.cpp
+
+
+
+
+# clean target in the mp1
+.PHONY: clean
+clean:
+	-rm -f *.o testimage 	o testscene
+   
+
+

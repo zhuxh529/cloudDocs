@@ -1,0 +1,68 @@
+
+	void Quadtree::prune(int i)
+{
+	
+   prunehelp(i,root);
+
+
+}
+
+
+   void Quadtree::prunehelp(int i, QuadtreeNode* subroot)
+{
+   if(subroot->nwChild==NULL) return;
+   bool tol;
+    tol=compare(subroot->nwChild, subroot->neChild, 
+          subroot->swChild, subroot->seChild, i);
+   if(tol==true) 
+   {
+clear(subroot->nwChild);
+clear(subroot->neChild);
+clear(subroot->swChild);
+clear(subroot->seChild);
+
+}
+	prunehelp(i,subroot->nwChild);
+	prunehelp(i,subroot->neChild);
+	prunehelp(i,subroot->swChild);
+	prunehelp(i,subroot->seChild);
+
+  
+
+}
+
+
+bool  Quadtree::compare(QuadtreeNode* nw, QuadtreeNode* ne, QuadtreeNode* sw, QuadtreeNode* se, int i)
+{
+int dnw, dne, dsw, dse ;
+RGBApixel total;
+total=average(nw, ne, sw, se);
+
+ dnw=getdif(nw->element, total);
+ dne=getdif(ne->element, total);
+ dsw=getdif(sw->element, total);
+ dse=getdif(se->element, total);
+
+ if(dnw<=i && dne<=i && dsw<=i && dse<=i)
+return true;
+ else return false;
+
+}
+
+//get average
+RGBApixel Quadtree::average(QuadtreeNode* nw, QuadtreeNode* ne, QuadtreeNode* sw, QuadtreeNode* se)
+{
+RGBApixel BBQ;
+BBQ.Red=( (nw->element).Red+(ne->element).Red+ (sw->element).Red + (se->element).Red )/4;
+BBQ.Green=( (nw->element).Green+(ne->element).Green+ (sw->element).Green + (se->element).Green )/4;
+BBQ.Blue=( (nw->element).Blue+(ne->element).Blue+ (sw->element).Blue + (se->element).Blue )/4;
+return BBQ;
+}
+
+
+int Quadtree::getdif(RGBApixel ta, RGBApixel total)
+{
+ int x;
+ x=pow(ta.Red-total.Red,2)+pow(ta.Green-total.Green,2)+pow(ta.Blue-total.Blue,2);
+ return x;
+}
