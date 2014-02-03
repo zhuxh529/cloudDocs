@@ -17,4 +17,5 @@ function M=errcorr(X,Y,mu,n,tol)
 			break
 		end
 	end
+end
 
