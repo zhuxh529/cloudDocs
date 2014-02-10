@@ -1,4 +1,4 @@
-function [w1,v1]=step2(n,s1,s2)
+function [w1,v1]=step3(n,s1,s2)
 	w=initWeights(s1,s2-1,0.01);
 	v=initWeights(s2,1,0.01);
 	%w=win;
@@ -9,8 +9,8 @@ function [w1,v1]=step2(n,s1,s2)
 	D=D';
 	x=1./D;
 	x=[ones(size(D)(1),1) x];
-	rate=0.00003;
-	slope=0.0005;
+	rate=0.0005;
+	slope=0.001;
 
 	error_rate=[];
 	desired_out=[];
