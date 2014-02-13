@@ -1,0 +1,256 @@
+function [r]=errorRate(w,v)
+	y=0;
+	y1=gety(w,v,[1 1 1]);
+	y2=gety(w,v,[1 1 0]);
+	y3=gety(w,v,[1 0 1]);
+	y4=gety(w,v,[1 0 0]);
+
+
+
+	if y1<0 & y2>0 & y3>0 & y4<0
+		%disp("correct prediction here")
+	end
+	%r=sqrt((-1-y1)^2)+sqrt((1-y2)^2)+sqrt((1-y3)^2)+sqrt((-1-y4)^2);
+	r=abs((-1-y1))+abs((1-y2))+abs((1-y3))+abs((-1-y4));
+
+end
+function [r]=errorRate2(w,v)
+	y=[];
+	number=20;
+	steps=0.9/number;
+	for i=0:number-1
+		y=[y gety(w,v,0.1+i*steps)];
+	end
+
+	y1=gety(w,v,[1 1 1]);
+	y2=gety(w,v,[1 1 0]);
+	y3=gety(w,v,[1 0 1]);
+	y4=gety(w,v,[1 0 0]);
+
+
+
+	
+	%r=sqrt((-1-y1)^2)+sqrt((1-y2)^2)+sqrt((1-y3)^2)+sqrt((-1-y4)^2);
+	r=abs((-1-y1))+abs((1-y2))+abs((1-y3))+abs((-1-y4));
+
+end
+function y=gety(w,v,x)
+	input=x;
+	slope=60;
+	y1=input*w;
+	y1=tanh(slope*y1);
+	y1=[1 y1];
+	y=tanh(slope*y1*v);
+end
+function y3=gety2(w,v,x)
+	D=[-1 ;1 ;1 ;-1];
+	rate=0.001;
+	w10=w(1,1);
+	w11=w(2,1);
+	w12=w(3,1);
+	w20=w(1,2);
+	w21=w(2,2);
+	w22=w(3,2);
+	v10=v(1);
+	v11=v(2);
+	v12=v(3);
+
+
+	input=x;
+	x1=input(2);
+	x2=input(3);
+
+	net1=w10+w11*x1+w12*x2;
+	net2=w20+w21*x1+w22*x2;
+	y1=tanh(net1);
+	y2=tanh(net2);
+	net3=v10+v11*y1+v12*y2;
+	y3=tanh(net3);
+end
+function weight=initWeights(row, col, limit)
+	weight=(unidrnd(20, [row,col])-10)*limit;
+	r=randi(10);
+	if r>5
+		weight(weight==0)=limit*0.5;
+	else 
+		weight(weight==0)=-limit*0.5;
+	end
+endw=initWeights(3,2,0.01);
+v=initWeights(3,1,0.01);
+x=[1 1 1; 1 1 0; 1 0 1; 1 0 0];
+D=[-1 ;1 ;1 ;-1];
+rate=0.001;
+
+no=randi(4);
+input=x(no,:);
+y1=input*w;
+y1=tanh(y1);
+y1=[1 y1];
+y2=tanh(y1*v);
+
+err2=(D(no,1)-y2)*(1-y2^2);
+err1=err2*v(2:3).*(1-y1(2:3)'.^2);
+dv=rate*err2*y1;
+
+dw=[x(no,:)', x(no,:)'].*repmat(err1',[3,1]);
+w=w+dw;
+v=v+dv';
+
+
+
+
+function [w1,v1,error_rate,desired_out, actual_out]=step(n)
+	w=initWeights(3,2,0.001)
+	v=initWeights(3,1,0.001)
+	%w=win;
+	%v=vin;
+	x=[1 1 1; 1 1 0; 1 0 1; 1 0 0];
+	D=[-1 ;1 ;1 ;-1];
+	rate=0.003;
+	slope=60;
+	error_rate=[];
+	desired_out=[];
+	actual_out=[];
+for i=1:n
+	no=randi(4);
+	%no=rem(i,4)+1;
+	input=x(no,:);
+	y1=input*w;
+	y1=tanh(slope*y1);
+	y1=[1 y1];
+	y2=tanh(slope*y1*v);
+
+	err2=(D(no,1)-y2)*(1-y2^2);
+	err1=err2*v(2:3).*(1-y1(2:3)'.^2);
+	dv=rate*err2*y1;
+
+	dw=rate*[x(no,:)', x(no,:)'].*repmat(err1',[3,1]);
+	w=w+dw;
+	v=v+dv';
+
+	if rem(i,1000)==0
+		%str = ['i is' num2str(i)]; 
+		%disp(str); 
+		str = [ num2str(i) '       ' num2str(input) '       ' num2str(D(no)) '       ' num2str(y2) '       ' num2str(D(no)-y2)]; 
+		disp(str);
+		w2=w;
+		v2=v; 
+		r=errorRate(w2,v2);
+		error_rate=[error_rate, r];
+		desired_out=[desired_out, D(no)];
+		actual_out=[actual_out, y2];
+
+
+	end
+end
+
+w1=w;
+v1=v;
+end
+
+function [w1,v1]=step2(n,s1,s2)
+	w=initWeights(s1,s2-1,0.01);
+	v=initWeights(s2,1,0.01);
+	%w=win;
+	%v=vin;
+	%x=0.1:0.0045000:1.0-0.0045000;
+	%x=x';
+	D=1:0.045000:10-0.045000;
+	D=D';
+	x=1./D;
+	x=[ones(size(D)(1),1) x];
+	rate=0.00003;
+	slope=0.0005;
+
+	error_rate=[];
+	desired_out=[];
+	actual_out=[];
+
+for i=1:n
+	j=rem(i,200)+1;
+	no=j;
+	err2=0;
+	%no=rem(i,4)+1;
+	input=x(no,:);
+	y1=input*w;
+	y1=4.5*tanh(slope*y1)+5.5;
+	y1=[1 y1];
+	y2=4.5*tanh(slope*y1*v)+5.5;
+
+	err2=err2+(D(no,1)-y2)*(1-y2^2);
+	err1=err2*v(2:s2).*(1-y1(2:s2)'.^2);
+	dv=rate*err2*y1;
+
+	%dw=rate*[x(no,:)', x(no,:)'].*repmat(err1',[s1,1]);
+	dw=rate*repmat(x(no,:)', [1,s2-1]).*repmat(err1',[s1,1]);
+
+	w=w+dw;
+	v=v+dv';
+	
+
+	if rem(i,155)==0
+		%str = ['i is' num2str(i)]; 
+		%disp(str); 
+		str = [ num2str(D(no)) '>>>>>>' num2str(y2)]; 
+		disp(str); 
+	end
+	
+	
+end
+
+w1=w;
+v1=v;
+end
+function [w1,v1]=step3(n,s1,s2)
+	w=initWeights(s1,s2-1,0.01);
+	v=initWeights(s2,1,0.01);
+	%w=win;
+	%v=vin;
+	%x=0.1:0.0045000:1.0-0.0045000;
+	%x=x';
+	D=1:0.045000:10-0.045000;
+	D=D';
+	x=1./D;
+	x=[ones(size(D)(1),1) x];
+	rate=0.0005;
+	slope=0.001;
+
+	error_rate=[];
+	desired_out=[];
+	actual_out=[];
+
+for i=1:n
+	j=rem(i,200)+1;
+	no=j;
+	err2=0;
+	%no=rem(i,4)+1;
+	input=x(no,:);
+	y1=input*w;
+	y1=4.5*tanh(slope*y1)+5.5;
+	y1=[1 y1];
+	y2=4.5*tanh(slope*y1*v)+5.5;
+
+	err2=err2+(D(no,1)-y2)*(1-y2^2);
+	err1=err2*v(2:s2).*(1-y1(2:s2)'.^2);
+	dv=rate*err2*y1;
+
+	%dw=rate*[x(no,:)', x(no,:)'].*repmat(err1',[s1,1]);
+	dw=rate*repmat(x(no,:)', [1,s2-1]).*repmat(err1',[s1,1]);
+
+	w=w+dw;
+	v=v+dv';
+	
+
+	if rem(i,155)==0
+		%str = ['i is' num2str(i)]; 
+		%disp(str); 
+		str = [ num2str(D(no)) '>>>>>>' num2str(y2)]; 
+		disp(str); 
+	end
+	
+	
+end
+
+w1=w;
+v1=v;
+end

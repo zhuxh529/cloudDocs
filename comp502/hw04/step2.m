@@ -1,12 +1,11 @@
 function [w1,v1]=step2(n,s1,s2)
 	w=initWeights(s1,s2-1,0.01);
 	v=initWeights(s2,1,0.01);
-	%w=win;
-	%v=vin;
 	xx=0.9*rand(200,1)+0.1;
 	%xx=xx';
 	DD=1./xx;
 	x=2.*xx.-1.1;
+	alpha=0;
 	
 	rate=0.05;
 	slope=1;
@@ -17,12 +16,12 @@ function [w1,v1]=step2(n,s1,s2)
 	error_rate=[];
 	desired_out=[];
 	actual_out=[];
+	dw_prev=zeros(s1,s2-1);
+	dv_prev=zeros(1,s2);
 
 for i=1:n
-	j=rem(i,200)+1;
 	no=randi(200);
 	err2=0;
-	%no=rem(i,4)+1;
 	input=x(no,:);
 	y1=input*w;
 	y1=tanh(slope*y1);
@@ -31,11 +30,12 @@ for i=1:n
 
 	err2=err2+(D(no,1)-y2)*(1-y2^2);
 	err1=err2*v(2:s2).*(1-y1(2:s2)'.^2);
-	dv=rate*err2*y1;
+	dv=rate*err2*y1+ dv_prev.*alpha;
+	dv_prev=dv;
 
 	%dw=rate*[x(no,:)', x(no,:)'].*repmat(err1',[s1,1]);
-	dw=rate*repmat(x(no,:)', [1,s2-1]).*repmat(err1',[s1,1]);
-
+	dw=rate*repmat(x(no,:)', [1,s2-1]).*repmat(err1',[s1,1]) + dw_prev.*alpha;
+	dw_prev=dw;
 	
 	
 
@@ -52,6 +52,8 @@ for i=1:n
 	
 	
 end
+size(dw)
+size(dv)
 
 w1=w;
 v1=v;
