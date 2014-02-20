@@ -2,7 +2,7 @@ function [w1,v1]=step4(n,s2,x,D)
 	maxi=repmat(max(x), [size(x)(1),1]);
 	mini=repmat(min(x), [size(x)(1),1]);
 	x= (x-mini).*2 ./(maxi-mini) -1;
-	
+
 
 
 	alpha=0.9;
