@@ -19,6 +19,8 @@ for no=1:size(x)(1)
 	y1=tanh(slope*y1);
 	y1=[1 y1];
 	y2=tanh(slope*y1*v);
+	y2(y2>0.3)=1;
+	y2(y2<-0.3)=-1;
 	out=[out; y2];
 end
 	err=abs(D.-out);
