@@ -47,6 +47,8 @@ void mapGraph(char c){
         break;
     default:
         error();
+         g.snapshot();
+
     }
     
     g->print();

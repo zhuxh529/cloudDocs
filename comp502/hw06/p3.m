@@ -21,7 +21,7 @@ testx=[ones(size(testx)(1),1) testx];
 x=[ones(size(x)(1),1) x];
 
 
-	paras=[0.9, 0.05,1, 200];
+	paras=[0.7, 0.03,1, 200];
 
 	
 	seq=unidrnd(size(testx)(1), [size(testx)(1)/3,1]);
